@@ -1,0 +1,7 @@
+# Python
+
+For linting in Python you would use Pylint, although there are other linters such as flake8 and mypy. For unit testing you would use unittest, although there are other options such as nose2 and pytest. For integration testing you would use Selenium, Robot, or maybe both.
+
+Some other popular CI/CD providers are TeamCity, CircleCI, Bamboo, GitLab, Buddy and Travis CI. Most of these can also be bound to GitHub, so if you use it for source control, then GitHub Actions isn't your only choice.
+
+It's hard to say whether this setup would be better suited for self-hosted or cloud-based environment, as it really depends on the type of software developed. If the software is small in scope and it's being developed by a small team, then setting up your own server would be a hassle and a cloud-based environment would make more sense. If the software is also CPU-bound and doesn't need any additional hardware to run, then a cloud-based environment may be preferable. However, if the software is GPU-bound then a self-hosted environment may be the way to go. Additionally, if the team is very large or there are many teams in need of a CI/CD-environment then a self-hosted server may be cheaper in the end.
