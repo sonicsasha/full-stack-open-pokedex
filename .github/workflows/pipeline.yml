@@ -57,6 +57,6 @@ jobs:
           uses: rjstone/discord-webhook-notify@v1
           with:
             webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-            severity: success
-            text: '{{ EVENT_PAYLOAD.repository.full_name }} was succesfully deployed :)'
+            severity: info
+            text: 'The Pokedex was succesfully deployed :)'
             avatarUrl: https://preview.redd.it/dye318nrz7c91.jpg?auto=webp&s=fa1692b5ed1544093cf9097fe67deeb1bcede879
