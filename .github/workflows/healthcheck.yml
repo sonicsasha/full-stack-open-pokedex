@@ -1,11 +1,8 @@
 name: Periodic health check
 
 on:
-    push:
-        branches:
-            - 'master'
     schedule:
-        - cron: '0 0 * * *'
+        - cron: '0 0 1 * *'
 
 
 jobs:
@@ -15,4 +12,4 @@ jobs:
             - name: Check the status of the deployed website
               uses: jtalk/url-health-check-action@v3
               with:
-                url: https://fullstackopenpokedex-9hfh.onrender.com/healt
+                url: https://fullstackopenpokedex-9hfh.onrender.com/health
