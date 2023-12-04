@@ -33,6 +33,14 @@ jobs:
             - name: Deploy to Render
               if: ${{ github.event_name == 'push'  && !contains(join(github.event.commits.*.message, ', '), '#skip')}}
               run: curl ${{ secrets.RENDER_DEPLOY_URL }}
+            - name: Discord notification
+              if: failure() && ${{ github.event_name == 'push' }}
+              env:
+                DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+                DISCORD_AVATAR: https://preview.redd.it/dye318nrz7c91.jpg?auto=webp&s=fa1692b5ed1544093cf9097fe67deeb1bcede879
+              uses: Ilshidur/action-discord@master
+              with:
+                args: '{{ EVENT_PAYLOAD.sender.login }} broke something when committing to {{ EVENT_PAYLOAD.repository.full_name }} >:('
     tag_release:
       needs: [simple_deployment_pipeline]
       runs-on: ubuntu-20.04
@@ -44,3 +52,11 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             DEFAULT_BUMP: patch
+        - name: Discord notification
+          if: ${{ github.event_name == 'push'  && !contains(join(github.event.commits.*.message, ', '), '#skip')}}
+          env:
+            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+            DISCORD_AVATAR: https://preview.redd.it/dye318nrz7c91.jpg?auto=webp&s=fa1692b5ed1544093cf9097fe67deeb1bcede879
+          uses: Ilshidur/action-discord@master
+          with:
+            args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
