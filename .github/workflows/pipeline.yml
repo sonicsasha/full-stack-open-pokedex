@@ -33,14 +33,14 @@ jobs:
             - name: Deploy to Render
               if: ${{ github.event_name == 'push'  && !contains(join(github.event.commits.*.message, ', '), '#skip')}}
               run: curl ${{ secrets.RENDER_DEPLOY_URL }}
-            - name: Discord notification
-              if: failure() && ${{ github.event_name == 'push' }}
-              env:
-                DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-                DISCORD_AVATAR: https://preview.redd.it/dye318nrz7c91.jpg?auto=webp&s=fa1692b5ed1544093cf9097fe67deeb1bcede879
-              uses: Ilshidur/action-discord@master
+            - name: Notify Discord on failure
+              if: ${{ failure() && github.event_name == 'push' }}
+              uses: rjstone/discord-webhook-notify@v1
               with:
-                args: '{{ EVENT_PAYLOAD.sender.login }} broke something when committing to {{ EVENT_PAYLOAD.repository.full_name }} >:('
+                webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+                severity: error
+                text: '{{ EVENT_PAYLOAD.sender.login }} broke something when committing to {{ EVENT_PAYLOAD.repository.full_name }} >:('
+                avatarUrl: https://preview.redd.it/dye318nrz7c91.jpg?auto=webp&s=fa1692b5ed1544093cf9097fe67deeb1bcede879
     tag_release:
       needs: [simple_deployment_pipeline]
       runs-on: ubuntu-20.04
@@ -54,9 +54,9 @@ jobs:
             DEFAULT_BUMP: patch
         - name: Discord notification
           if: ${{ github.event_name == 'push'  && !contains(join(github.event.commits.*.message, ', '), '#skip')}}
-          env:
-            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-            DISCORD_AVATAR: https://preview.redd.it/dye318nrz7c91.jpg?auto=webp&s=fa1692b5ed1544093cf9097fe67deeb1bcede879
-          uses: Ilshidur/action-discord@master
+          uses: rjstone/discord-webhook-notify@v1
           with:
-            args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+            severity: success
+            text: '{{ EVENT_PAYLOAD.repository.full_name }} was succesfully deployed :)'
+            avatarUrl: https://preview.redd.it/dye318nrz7c91.jpg?auto=webp&s=fa1692b5ed1544093cf9097fe67deeb1bcede879
